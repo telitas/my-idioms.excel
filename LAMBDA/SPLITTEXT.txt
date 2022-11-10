@@ -1,0 +1,66 @@
+SPLITTEXT.TOMATRIX = LAMBDA(text, column_delimiter, row_delimiter,
+    LET(
+        length_of_text, LEN(text),
+        length_of_row_delimiter, LEN(row_delimiter),
+        length_of_column_delimiter, LEN(column_delimiter),
+        row_delimiter_count, (length_of_text - LEN(SUBSTITUTE(text, row_delimiter, ""))) / length_of_row_delimiter,
+        first_row_text, SELECT(text, row_delimiter, 1),
+        first_column_delimiter_count, (LEN(first_row_text) - LEN(SUBSTITUTE(first_row_text, column_delimiter, ""))) / length_of_column_delimiter,
+        MAKEARRAY(row_delimiter_count + 1, first_column_delimiter_count + 1,
+            LAMBDA(row_index, column_index,
+                LET(
+                    row_text, SELECT(text, row_delimiter, row_index),
+                    column_delimiter_count, (LEN(row_text) - LEN(SUBSTITUTE(row_text, column_delimiter, ""))) / length_of_column_delimiter,
+                    IF(column_delimiter_count <> first_column_delimiter_count, #VALUE!,
+                        SELECT(row_text, column_delimiter, column_index)
+                    )
+                )
+            )
+        )
+    )
+);
+
+SPLITTEXT.SELECT = LAMBDA(text, delimiter, index,
+    LET(
+        length_of_text, LEN(text),
+        length_of_delimiter, LEN(delimiter),
+        delimiter_count, (length_of_text - LEN(SUBSTITUTE(text, delimiter, ""))) / length_of_delimiter,
+        found_index, FIND(delimiter, text),
+        IF(OR(index = 0, ABS(index) > delimiter_count + 1), #VALUE!,
+        IF(index < 0, SELECT(text, delimiter, delimiter_count + 2 + index),
+        IF(index = 1, IF(ISERROR(found_index), text, LEFT(text, found_index - 1)),
+            SELECT(RIGHT(text, length_of_text - (found_index - 1 + length_of_delimiter)), delimiter, index - 1)
+        )))
+    )
+);
+
+SPLITTEXT.TOCOLUMNS = LAMBDA(text, delimiter,
+    LET(
+        length_of_text, LEN(text),
+        length_of_delimiter, LEN(delimiter),
+        delimiter_count, (length_of_text - LEN(SUBSTITUTE(text, delimiter, ""))) /
+            length_of_delimiter,
+        MAKEARRAY(
+            1,
+            delimiter_count + 1,
+            LAMBDA(row_index, column_index,
+                SELECT(text, delimiter, column_index)
+            )
+        )
+    )
+);
+
+SPLITTEXT.TOROWS = LAMBDA(text, delimiter,
+    LET(
+        length_of_text, LEN(text),
+        length_of_delimiter, LEN(delimiter),
+        delimiter_count, (length_of_text - LEN(SUBSTITUTE(text, delimiter, ""))) / length_of_delimiter,
+        MAKEARRAY(
+            delimiter_count + 1,
+            1,
+            LAMBDA(row_index, column_index,
+                SELECT(text, delimiter, row_index)
+            )
+        )
+    )
+);
