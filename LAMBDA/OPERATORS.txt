@@ -1,0 +1,17 @@
+OPERATORS.CONTAINS = LAMBDA(array, value,
+    LET(
+        value_is_error, ISERROR(value),
+        errortype_of_value, ERROR.TYPE(value),
+        REDUCE(FALSE, array,
+            LAMBDA(found, element,
+                OR(found, IF(
+                    value_is_error <> ISERROR(element), FALSE,
+                    IF(
+                        value_is_error, ERROR.TYPE(element) = errortype_of_value,
+                        element = value
+                    )
+                ))
+            )
+        )
+    )
+);
