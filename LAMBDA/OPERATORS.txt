@@ -1,4 +1,4 @@
-OPERATORS.CONTAINS = LAMBDA(array, value,
+CONTAINS = LAMBDA(array, value,
     LET(
         value_is_error, ISERROR(value),
         errortype_of_value, ERROR.TYPE(value),

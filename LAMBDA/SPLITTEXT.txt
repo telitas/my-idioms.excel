@@ -1,4 +1,4 @@
-SPLITTEXT.TOMATRIX = LAMBDA(text, column_delimiter, row_delimiter,
+TOMATRIX = LAMBDA(text, column_delimiter, row_delimiter,
     LET(
         length_of_text, LEN(text),
         length_of_row_delimiter, LEN(row_delimiter),
@@ -20,7 +20,7 @@ SPLITTEXT.TOMATRIX = LAMBDA(text, column_delimiter, row_delimiter,
     )
 );
 
-SPLITTEXT.SELECT = LAMBDA(text, delimiter, index,
+SELECT = LAMBDA(text, delimiter, index,
     LET(
         length_of_text, LEN(text),
         length_of_delimiter, LEN(delimiter),
@@ -34,7 +34,7 @@ SPLITTEXT.SELECT = LAMBDA(text, delimiter, index,
     )
 );
 
-SPLITTEXT.TOCOLUMNS = LAMBDA(text, delimiter,
+TOCOLUMNS = LAMBDA(text, delimiter,
     LET(
         length_of_text, LEN(text),
         length_of_delimiter, LEN(delimiter),
@@ -50,7 +50,7 @@ SPLITTEXT.TOCOLUMNS = LAMBDA(text, delimiter,
     )
 );
 
-SPLITTEXT.TOROWS = LAMBDA(text, delimiter,
+TOROWS = LAMBDA(text, delimiter,
     LET(
         length_of_text, LEN(text),
         length_of_delimiter, LEN(delimiter),
