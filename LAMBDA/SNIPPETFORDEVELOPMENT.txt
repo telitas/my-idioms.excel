@@ -1,0 +1,22 @@
+INDENT = LAMBDA(text, indent_chars,
+    LET(
+        LF, CHAR(10),
+        indent, IFS(
+            TYPE(indent_chars) = 1, REPT(" ", indent_chars),
+            TYPE(indent_chars) = 2, indent_chars,
+            TRUE, #VALUE!
+        ),
+        indent & SUBSTITUTE(text, LF, LF & indent)
+    )
+);
+
+DATATOTEXT = LAMBDA(value, format,
+    LET(
+        type_of_value, TYPE(value),
+        IFS(
+            type_of_value = 128, #VALUE!,
+            type_of_value = 64, ARRAYTOTEXT(value, format),
+            TRUE, VALUETOTEXT(value, format)
+        )
+    )
+);
