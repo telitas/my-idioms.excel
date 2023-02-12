@@ -1,0 +1,47 @@
+/**
+CROSS JOIN two arrays.
+*/
+CROSSJOIN = LAMBDA(one, another,
+    LET(
+        one_columns, COLUMNS(one),
+        another_rows, ROWS(another),
+        DROP(
+            REDUCE(
+                HSTACK(0),
+                one,
+                LAMBDA(accumulator, current,
+                    LET(
+                        element_count, INDEX(accumulator, 1, 1) + 1,
+                        column_pointer, MOD(element_count - 1, one_columns) + 1,
+                        row_cross_join, LAMBDA(row_of_one,
+                            HSTACK(MAKEARRAY(another_rows, one_columns, LAMBDA(x, y, INDEX(row_of_one, 1, y))), another)
+                        ),
+                        VSTACK(
+                            HSTACK(element_count),
+                            DROP(
+                                IF(
+                                    column_pointer = 1, VSTACK(
+                                        accumulator,
+                                        IF(
+                                            column_pointer <> one_columns, HSTACK(current),
+                                            row_cross_join(current)
+                                        )
+                                    ),
+                                    VSTACK(
+                                        DROP(accumulator, -1),
+                                        IF(
+                                            column_pointer <> one_columns, HSTACK(TAKE(accumulator, -1, column_pointer - 1), current),
+                                            row_cross_join(HSTACK(TAKE(accumulator, -1, column_pointer - 1), current))
+                                        )
+                                    )
+                                )
+                                , 1
+                            )
+                        )
+                    )
+                )
+            )
+        , 1
+        )
+    )
+)
